@@ -97,6 +97,38 @@ function completarT()
 
 end
 
+# Listar tareas por fecha
+function listarxFecha()
+    println("\n Tareas ordenadas por fecha:")
+    todas = reduce(vcat, values(tareas))
+    ordenadas = sort(todas, by = t -> t.fecha)
+
+    for (i, t) in enumerate(ordenadas)
+        estado_str = t.estado ? "Completada" : "Pendiente"
+        println("[$i] $(t.titulo) - $(t.fecha) - $(estado_str) - Categoria: $(t.categoria)")
+    end
+end
+
+#Listar tareas por categoria
+function listarxCategoria()
+    println("\nTareas agrupadas por categoría:")
+
+    todast = reduce(vcat, values(tareas))
+
+    for categoria in Categorias
+        println("\nCategoría: $categoria")
+        tareaCate = filter(t -> t.categoria == categoria, todast)
+        if isempty(tareaCate)
+            println("  No hay tareas en esta categoría.")
+        else
+            tareasOrden = sort(tareaCate, by = t -> t.fecha)
+            for t in tareasOrden
+                estadostr = t.estado ? "Completada" : "Pendiente"
+                println(" - $(t.titulo) - $(t.fecha) - $(estadostr)")
+            end
+        end
+    end
+end
 
 function menu()
     while true
@@ -104,7 +136,7 @@ function menu()
         println("1. Agregar tarea")
         println("2. Listar tareas por prioridad")
         println("3. Listar tareas por fecha")
-        println("4. Listar tareas por etiqueta")
+        println("4. Listar tareas por categoria")
         println("5. Marcar tarea como completada")
         println("6. Salir")
         print("Ingrese la opcion que desea: ")
@@ -116,9 +148,9 @@ function menu()
         elseif opcion == "2"
             listarxPrioridad()
         elseif opcion == "3"
-            
+            listarxFecha()
         elseif opcion == "4"
-            
+            listarxCategoria()
         elseif opcion == "5"
             completarT()
         elseif opcion == "6"
